@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using LivrariaMVC.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MySQL.Data.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace LivrariaMVC
 {
@@ -26,7 +25,7 @@ namespace LivrariaMVC
         {
             // Add framework services.
             services.AddDbContext<LivroContexto>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
         }
 

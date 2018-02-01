@@ -1,0 +1,38 @@
+@model IEnumerable<LivrariaMVC.Models.Livro>
+@{
+    ViewData["Title"] = "Livros";
+}
+
+<h2>Livros</h2>
+
+<p>
+    <a>Cadastrar novo livro</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(modelo => modelo.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(modelo => modelo.Autor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(modelo => modelo.Preco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(modelo => modelo.Lancamento)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(itemModelo => item.Nome)</td>
+            <td>@Html.DisplayFor(itemModelo => item.Autor)</td>
+            <td>@Html.DisplayFor(itemModelo => item.Preco)</td>
+            <td>@Html.DisplayFor(itemModelo => item.Lancamento)</td>
+        </tr>        
+        }
+    </tbody>
+</table>
