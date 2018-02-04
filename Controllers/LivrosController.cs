@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using LivrariaMVC.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace LivrariaMVC.Controllers
 {
@@ -10,13 +11,46 @@ namespace LivrariaMVC.Controllers
     {
         private readonly LivroContexto _contexto;
 
-        public LivrosController(LivroContexto contexto)
+        private bool LivroExiste(int id) => _contexto.Livros.Any(l => l.Id == id); 
+        public LivrosController(LivroContexto contexto) => _contexto = contexto;
+        public async Task<IActionResult> Index() => View(await _contexto.Livros.ToListAsync());
+        public async Task<IActionResult> Editar(int? id)
         {
-            _contexto = contexto;
+            if(id == null)
+                return NotFound();
+
+            var livro = await _contexto.Livros.SingleOrDefaultAsync(l => l.Id == id);
+            
+            if(livro == null)
+                return NotFound();
+
+            return View(livro);
         }
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Editar(int? id, [Bind("Id, Nome, Autor, Preco, Lancamento")] Livro livro)
         {
-            return View(await _contexto.Livros.ToListAsync());
+            if (id != livro.Id)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _contexto.Update(livro);
+                    await _contexto.SaveChangesAsync();
+                }
+                catch(DbUpdateConcurrencyException)
+                {
+                    if (!LivroExiste(livro.Id))
+                        return NotFound();
+                    else
+                        throw;
+                }
+                return RedirectToAction("Index");
+            }
+            return View(livro);
         }
+
     }
 }
