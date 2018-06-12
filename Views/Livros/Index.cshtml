@@ -1,43 +1,46 @@
-@model IEnumerable<LivrariaMVC.Models.Livro>
 @{
     ViewData["Title"] = "Livros";
 }
-
+@section Scripts{
+    <!-- The jQuery library is a prerequisite for all jqSuite products -->
+    <script type="text/ecmascript" src="~/lib/jqGrid2/js/jquery.min.js"></script> 
+    <!-- We support more than 40 localizations -->
+    <script type="text/ecmascript" src="~/lib/jqGrid2/js/trirand/i18n/grid.locale-en.js"></script>
+    <!-- This is the Javascript file of jqGrid -->   
+    <script type="text/ecmascript" src="~/lib/jqGrid2/js/trirand/jquery.jqGrid.min.js"></script>
+}
 <h2>Livros</h2>
 
 <p>
     <a>Cadastrar novo livro</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(modelo => modelo.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(modelo => modelo.Autor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(modelo => modelo.Preco)
-            </th>
-            <th>
-                @Html.DisplayNameFor(modelo => modelo.Lancamento)
-            </th>
-
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-        <tr>
-            <td>@Html.DisplayFor(itemModelo => item.Nome)</td>
-            <td>@Html.DisplayFor(itemModelo => item.Autor)</td>
-            <td>@Html.DisplayFor(itemModelo => item.Preco)</td>
-            <td>@Html.DisplayFor(itemModelo => item.Lancamento)</td>
-            <td>
-                <a asp-action="Editar" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Deletar" asp-route-id="@item.Id">Deletar</a>
-            </td>
-        </tr>        
-        }
-    </tbody>
-</table>
+<div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+</div>
+<script>
+		$.jgrid.defaults.width = 1200;
+		$.jgrid.defaults.styleUI = 'Bootstrap';
+	</script>
+<script>
+$(document).ready(function () {
+    $("#jqGrid").jqGrid({
+            url: 'Livros/GetLivros',
+            datatype: "json",
+            colModel: [
+                { label: 'id', name: 'CategoryName', width: 100 },
+                { label: 'nome', name: 'ProductName', width: 100 },
+                { label: 'autor', name: 'Country', width: 100 },
+                { label: 'preco', name: 'Price', width: 100, sorttype: 'integer' },
+                // sorttype is used only if the data is loaded locally or loadonce is set to true
+                { label: 'lancamento', name: 'Quantity', width: 100, sorttype: 'number' }                   
+            ],
+            viewrecords: true, // show the current page, data rang and total records on the toolbar
+            width: 780,
+            height: 200,
+            rowNum: 30,
+            loadonce: true, // this is just for the demo
+            pager: "#jqGridPager"
+        });
+});
+</script>

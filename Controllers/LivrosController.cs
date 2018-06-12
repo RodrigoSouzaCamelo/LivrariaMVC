@@ -51,6 +51,11 @@ namespace LivrariaMVC.Controllers
             }
             return View(livro);
         }
+        [HttpGet]
+        public JsonResult GetLivros(){
+            var list = _contexto.Livros.ToListAsync();
+            return Json(list);
+        }
 
     }
 }
